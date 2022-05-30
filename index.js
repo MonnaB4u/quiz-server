@@ -10,7 +10,7 @@ const uri = `mongodb+srv://${process.env.DB_user}:${process.env.DB_Password}@clu
 const app = express()
 app.use(bodyParser.json());
 app.use(cors())
-const port =process.env.PORT ||  5000
+const port = process.env.PORT || 5000
 
 
 app.get('/', (req, res) => {
@@ -29,8 +29,8 @@ async function run() {
     try {
         await client.connect();
         const database = client.db("onlineQuozeDb");
-        const onlineQuozeDbcollection   = database.collection("AllQuestion");;
-
+        const onlineQuozeDbcollection = database.collection("AllQuestion");
+        const feedback = database.collection("feedback");
 
         // create a document to insert
 
@@ -46,15 +46,29 @@ async function run() {
             res.json(result)
         })
 
+        app.post('/addfeedback', async (req, res) => {
+            const newData = req.body
+            const result = await feedback.insertOne(newData
+            );
+            console.log('New user found', req.body)
+            console.log('New user added', result)
+            res.json(result)
+        })
+
 
         //////// Get All Project and Display
 
-   app.get('/quizall', async (req, res) => {
+        app.get('/quizall', async (req, res) => {
             const cursor = onlineQuozeDbcollection.find({});
             const user = await cursor.toArray();
             res.send(user);
         })
 
+        app.get('/allfeedback', async (req, res) => {
+            const cursor = feedback.find({});
+            const user = await cursor.toArray();
+            res.send(user);
+        })
 
 
 
