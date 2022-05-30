@@ -49,11 +49,13 @@ async function run() {
 
         //////// Get All Project and Display
 
-        app.get('/onlineQuozeDbcollection ', async (req, res) => {
-            const cursor = onlineQuozeDbcollection .find({});
+   app.get('/quizall', async (req, res) => {
+            const cursor = onlineQuozeDbcollection.find({});
             const user = await cursor.toArray();
             res.send(user);
         })
+
+
 
 
         ///// Delete One Project
